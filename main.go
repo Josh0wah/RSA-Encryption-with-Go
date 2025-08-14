@@ -9,17 +9,17 @@ import (
 	"os"
 )
 
-func findPrime() uint {
-	testNum := rand.Int()%100 + 10
-	for i := 2; i < testNum; i++ {
-		if testNum%i == 0 {
+func findPrime() uint64 {
+	testNum := rand.Uint64()%100 + 10
+	for i := 2; uint64(i) < testNum; i++ {
+		if testNum%uint64(i) == 0 {
 			return findPrime()
 		}
 	}
-	return uint(testNum)
+	return testNum
 }
 
-func encrypt(fileName string, p uint, q uint, n uint64, phi uint64) {
+func encrypt(fileName string, p uint64, q uint64, n uint64, phi uint64) {
 
 }
 
