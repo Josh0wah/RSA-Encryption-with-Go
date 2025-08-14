@@ -30,6 +30,9 @@ func decrypt(fileName string) {
 func main() {
 	p := findPrime()
 	q := findPrime()
+	for q == p {
+		q = findPrime()
+	}
 	var n uint64 = uint64(p) * uint64(q)
 	var phi uint64 = (uint64(p - 1)) * (uint64(q - 1))
 
