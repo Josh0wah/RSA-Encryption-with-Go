@@ -4,8 +4,6 @@
 package main
 
 import (
-	"fmt"
-	"math"
 	"math/rand"
 	"os"
 )
@@ -62,7 +60,7 @@ func main() {
 	}
 	defer fKeys.Close()
 
-	keys := "Private key (e, n): " + string(e) + " " + string(n) + "\n Public key (d, n): " + string(d) + " " + string(n)
+	keys := "Private key (e, n): " + string(e) + " " + string(n) + "\n Public key (d, n): " + string(d) + " " + string(n) + "\n"
 	_, err = fKeys.WriteString(keys)
 	if err != nil {
 		panic(err)
