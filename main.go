@@ -6,6 +6,7 @@ package main
 import (
 	"math/rand"
 	"os"
+	"strconv"
 )
 
 func findPrime() uint64 {
@@ -54,13 +55,13 @@ func main() {
 		}
 	}
 
-	fKeys, err := os.Create("files/keys.txt")
+	fKeys, err := os.Create("test/keys.txt")
 	if err != nil {
 		panic(err)
 	}
 	defer fKeys.Close()
 
-	keys := "Private key (e, n): " + string(e) + " " + string(n) + "\n Public key (d, n): " + string(d) + " " + string(n) + "\n"
+	keys := "Private key (e, n): " + strconv.FormatUint(e, 10) + " " + strconv.FormatUint(n, 10) + "\nPublic key (d, n): " + strconv.FormatUint(d, 10) + " " + strconv.FormatUint(n, 10) + "\n"
 	_, err = fKeys.WriteString(keys)
 	if err != nil {
 		panic(err)
