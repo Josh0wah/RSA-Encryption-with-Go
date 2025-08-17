@@ -5,7 +5,7 @@ package main
 
 import (
 	"fmt"
-	"math"
+	"math/big"
 	"math/rand"
 	"os"
 	"strconv"
@@ -16,10 +16,10 @@ func main() {
 	switch os.Args[1] {
 	case "-e":
 		//         file name
-		encrypt(string(os.Args[2]))
+		encrypt(os.Args[2])
 	case "-d":
 		//          file name           d          n
-		decrypt(string(os.Args[2]), os.Args[3], os.Args[4])
+		decrypt(os.Args[2], os.Args[3], os.Args[4])
 	default:
 		panic("Invalid command")
 	}
@@ -86,7 +86,13 @@ func encrypt(fileName string) {
 	if err != nil {
 		panic(err)
 	}
-	encrypted := uint64(math.Pow(float64(toInt), float64(e))) % n
+
+	m := big.NewInt(int64(toInt))
+	eBig := big.NewInt(int64(e))
+	nBig := big.NewInt(int64(n))
+
+	encryptedBig := new(big.Int).Exp(m, eBig, nBig)
+	encrypted := encryptedBig.Uint64()
 
 	fEncrypted, err := os.Create("encrypted.txt")
 	if err != nil {
@@ -123,7 +129,13 @@ func decrypt(fileName string, d string, n string) {
 	if err != nil {
 		panic(err)
 	}
-	decrypted := uint64(math.Pow(float64(toInt), float64(dInt))) % uint64(nInt)
+
+	dBig := big.NewInt(int64(dInt))
+	nBig := big.NewInt(int64(nInt))
+
+	encryptedBig := big.NewInt(int64(toInt))
+	decryptedBig := new(big.Int).Exp(encryptedBig, dBig, nBig)
+	decrypted := decryptedBig.Uint64()
 
 	fDecrypted, err := os.Create("decrypted.txt")
 	if err != nil {
