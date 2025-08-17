@@ -4,17 +4,21 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func main() {
 	switch os.Args[1] {
 	case "-e":
+		//         file name
 		encrypt(string(os.Args[2]))
 	case "-d":
+		//          file name           d          n
 		decrypt(string(os.Args[2]), os.Args[3], os.Args[4])
 	default:
 		panic("Invalid command")
@@ -54,7 +58,7 @@ func encrypt(fileName string) {
 	}
 	var d uint64
 	for d = 2; d < phi; d++ {
-		if (e*d)%phi == 1 {
+		if (d*e)%phi == 1 {
 			break
 		}
 	}
@@ -71,12 +75,17 @@ func encrypt(fileName string) {
 		panic(err)
 	}
 
-	message, err := os.ReadFile(fileName)
+	messageBytes, err := os.ReadFile(fileName)
 	if err != nil {
 		panic(err)
 	}
+	message := string(messageBytes)
+	message = strings.Trim(message, "\n")
 
-	toInt, _ := strconv.Atoi(string(message))
+	toInt, err := strconv.Atoi(message)
+	if err != nil {
+		panic(err)
+	}
 	encrypted := uint64(math.Pow(float64(toInt), float64(e))) % n
 
 	fEncrypted, err := os.Create("encrypted.txt")
@@ -89,18 +98,31 @@ func encrypt(fileName string) {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Print("Encryption successful. keys.txt and encrypted.txt have been created.\n")
 }
 
 func decrypt(fileName string, d string, n string) {
-	dInt, _ := strconv.Atoi(d)
-	nInt, _ := strconv.Atoi(n)
-
-	encrypted, err := os.ReadFile(fileName)
+	dInt, err := strconv.Atoi(d)
+	if err != nil {
+		panic(err)
+	}
+	nInt, err := strconv.Atoi(n)
 	if err != nil {
 		panic(err)
 	}
 
-	toInt, _ := strconv.Atoi(string(encrypted))
+	encryptedBytes, err := os.ReadFile(fileName)
+	if err != nil {
+		panic(err)
+	}
+	encrypted := string(encryptedBytes)
+	encrypted = strings.Trim(encrypted, "\n")
+
+	toInt, err := strconv.Atoi(string(encrypted))
+	if err != nil {
+		panic(err)
+	}
 	decrypted := uint64(math.Pow(float64(toInt), float64(dInt))) % uint64(nInt)
 
 	fDecrypted, err := os.Create("decrypted.txt")
@@ -113,4 +135,6 @@ func decrypt(fileName string, d string, n string) {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Print("Decryption successful. decrypted.txt has been created.\n")
 }
